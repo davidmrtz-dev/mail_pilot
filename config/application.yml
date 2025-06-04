@@ -1,0 +1,14 @@
+development:
+  RAILS_MAX_THREADS: 5
+  DB_NAME: mail_pilot_development
+  DB_HOSTNAME: localhost
+  DB_USERNAME: postgres
+  DB_PASSWORD: postgres
+  DB_PORT: 5441
+test:
+  RAILS_MAX_THREADS: 5
+  DB_NAME: mail_pilot_test
+  DB_HOSTNAME: localhost
+  DB_USERNAME: postgres
+  DB_PASSWORD: postgres
+  DB_PORT: 5441
