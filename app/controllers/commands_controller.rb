@@ -2,15 +2,23 @@ class CommandsController < ApplicationController
   # POST /inbound
   def receive_email
     body = params[:TextBody].to_s.strip.upcase
-    command_text = body
+    command_text = body.presence
 
-    if command_text.present?
+    if command_text.blank?
+      return render json: { error: "Command cannot be empty" }, status: :unprocessable_entity
+    end
+
+    if Command.where(status: %i[pending running], action: command_text).exists?
+      return render json: { error: "Command already exists and is not completed yet" }, status: :conflict
+    end
+
+    command = Command.new(action: command_text)
+
+    if command.save
       Rails.logger.info(">> Received command: #{command_text}")
-      Command.create(action: command_text)
       render json: { status: "command received", command: command_text }, status: :ok
     else
-      Rails.logger.warn(">> No command found in email")
-      render json: { error: "No command found" }, status: :unprocessable_entity
+      render json: { error: command.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end
   end
 
