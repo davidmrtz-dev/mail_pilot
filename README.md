@@ -102,6 +102,20 @@ The following commands are supported:
 
 - DOOR_OPEN, DOOR_CLOSE
 
+## 🧭 System Diagram
+
+![Mail Pilot System Diagram](https://raw.githubusercontent.com/davidmrtz-dev/mail_pilot/main/diagram_mail_pilot.png)
+
+### 🧠 How it works
+
+1. A user sends an email with a valid command to Postmark.
+2. Postmark triggers a webhook (`/inbound`) in the Rails API with the `TextBody` of the email.
+3. The Rails API validates and stores the command in the database.
+4. The ESP8266 polls `/device/commands/latest` every 3 seconds.
+5. If a command is pending:
+   - It executes the action.
+   - Reports completion or failure via PATCH endpoints.
+
 ## 🙏 Acknowledgments
 Mail Pilot is proudly built for the Postmark Challenge.
 Powered by email, Ruby, and a little Wi-Fi magic.
