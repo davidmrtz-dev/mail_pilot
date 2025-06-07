@@ -2,11 +2,12 @@ class Command < ApplicationRecord
   enum :status, { pending: 0, running: 1, completed: 2, failed: 3 }
 
   VALID_COMMANDS = %w[
-    LED_ON LED_OFF
-    SERVO_0 SERVO_90
-    BUZZER_ON BUZZER_OFF
-    RGB_RED RGB_GREEN RGB_BLUE
-    DISPLAY:HELLO DISPLAY:BYE
+    ROOM_1_ON ROOM_1_OFF
+    ROOM_2_ON ROOM_2_OFF
+    ROOM_3_ON ROOM_3_OFF
+    ROOM_4_ON ROOM_4_OFF
+    DOOR_OPEN DOOR_CLOSE
+    ALARM_ON ALARM_OFF
   ].freeze
 
   validates :action, presence: true
