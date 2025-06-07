@@ -7,7 +7,6 @@ class Command < ApplicationRecord
     ROOM_3_ON ROOM_3_OFF
     ROOM_4_ON ROOM_4_OFF
     DOOR_OPEN DOOR_CLOSE
-    ALARM_ON ALARM_OFF
   ].freeze
 
   validates :action, presence: true

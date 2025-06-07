@@ -1,24 +1,107 @@
-# README
+# Mail Pilot – Rails API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This Rails API serves as the backend for the **Mail Pilot** system, created for the [Postmark Challenge](https://dev.to/challenges/postmark).
+It receives commands via email (webhook) and delivers them to a connected device (ESP8266).
 
-Things you may want to cover:
+## 📦 Overview
 
-* Ruby version
+- Parses incoming email bodies and extracts valid commands.
+- Stores each command in the database with a status (`pending`, `running`, `completed`, `failed`).
+- Exposes endpoints for the ESP8266 to fetch and report command statuses.
 
-* System dependencies
+## 🛠 Tech Stack
 
-* Configuration
+- Ruby on Rails 7
+- PostgreSQL
+- Docker + Docker Compose
 
-* Database creation
+## 🧪 Getting Started
 
-* Database initialization
+### 1. Clone the repo
 
-* How to run the test suite
+```bash
+git clone https://github.com/your-username/mail_pilot.git
+cd mail_pilot
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### 2. Set up environment
 
-* Deployment instructions
+Create a .env file:
 
-* ...
+```env
+API_PORT=3006
+DB_PORT_EXPOSE=5441
+```
+
+### 3. Build and run DB with Docker
+
+```bash
+docker-compose up --build
+```
+
+### 4. Create the database
+
+```bash
+bin/rails db:create db:migrate
+```
+
+### 5. Run the server
+
+```bash
+bin/rails server
+```
+
+## 📬 Email Webhook Endpoint
+
+POST /inbound
+
+- Receives emails via Postmark Inbound webhook.
+
+- Parses the TextBody and saves it as a command.
+
+```json
+{
+  "TextBody": "ROOM_1_ON"
+}
+```
+
+## 📡 Device Endpoints
+
+GET /device/commands/latest
+Returns the oldest pending command and marks it as running.
+Response:
+```json
+{
+  "id": 42,
+  "command": "ROOM_1_ON"
+}
+```
+If no command is found:
+```json
+{
+  "command": null
+}
+```
+
+PATCH /device/commands/:id/complete
+Marks the command as completed.
+
+PATCH /device/commands/:id/failed
+Marks the command as failed.
+
+## ✅ Valid Commands
+The following commands are supported:
+
+- ROOM_1_ON, ROOM_1_OFF
+
+- ROOM_2_ON, ROOM_2_OFF
+
+- ROOM_3_ON, ROOM_3_OFF
+
+- ROOM_4_ON, ROOM_4_OFF
+
+- DOOR_OPEN, DOOR_CLOSE
+
+## 🙏 Acknowledgments
+Mail Pilot is proudly built for the Postmark Challenge.
+Powered by email, Ruby, and a little Wi-Fi magic.
